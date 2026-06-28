@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Free MCP Sandbox — HeptaFox</title>
-<meta name="description" content="Free MCP sandbox server. Connect any MCP client in under a minute — no auth required. Streamable HTTP.">
+<meta name="description" content="Free Model Context Protocol (MCP) sandbox server. Connect any MCP client in under a minute — no auth required. Streamable HTTP.">
 <link rel="canonical" href="https://mcp.heptafox.com/">
 <link rel="icon" type="image/png" href="/mcp-logo.png">
 <meta name="robots" content="index, follow">
@@ -174,7 +174,7 @@
 
   <div class="hero">
     <h1>The Free MCP Sandbox</h1>
-    <p class="hero-sub">Test any MCP client in under a minute.</p>
+    <p class="hero-sub">Test any Model Context Protocol (MCP) client in under a minute.</p>
 
     <div class="meta-row">
       <div class="metafield ep-field">
@@ -195,7 +195,7 @@
 
     <div class="hero-actions">
       <button class="btn-primary" id="copy-ep-btn">Copy Endpoint</button>
-      <a class="btn-secondary" id="inspector-link" href="#" target="_blank" rel="noopener">Open in MCP Inspector ↗</a>
+      <a class="btn-secondary" href="https://app.mcpjam.com/servers" target="_blank" rel="noopener">Test in MCP Jam ↗</a>
     </div>
   </div>
 
@@ -242,13 +242,6 @@
   }
 }</pre>
       </div>
-      <div class="card span-all">
-        <div class="ch"><h3>Raw HTTP (curl)</h3><button class="copy" data-copy="#raw">Copy</button></div>
-        <pre id="raw">curl -X POST <span class="url">URL</span> \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"identity","arguments":{}}}'</pre>
-      </div>
     </div>
     <p class="note">⚠️ Use <code>/mcp</code> with no trailing slash — some clients drop the POST body across a 307 redirect.</p>
   </section>
@@ -280,9 +273,6 @@
   const mcpUrl = location.origin + '/mcp';
   document.getElementById('ep').textContent = mcpUrl;
   document.querySelectorAll('.url').forEach(el => el.textContent = mcpUrl);
-  document.getElementById('inspector-link').href =
-    'https://inspector.modelcontextprotocol.io/?url=' + encodeURIComponent(mcpUrl);
-
   const copyEpBtn = document.getElementById('copy-ep-btn');
   copyEpBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(mcpUrl).then(() => {
