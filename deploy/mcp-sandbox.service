@@ -1,0 +1,14 @@
+[Unit]
+Description=mcp-sandbox FastMCP server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/mcp-sandbox
+ExecStart=/home/ubuntu/.local/bin/uv run server.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mcp-sandbox</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 16px/1.6 ui-sans-serif, system-ui, sans-serif; max-width: 760px;
+         margin: 3rem auto; padding: 0 1.25rem; }
+  h1 { margin-bottom: .25rem; }
+  .sub { color: #888; margin-top: 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  pre { background: #1113; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+  .pill { display: inline-block; background: #2563eb22; color: #2563eb;
+          padding: .1rem .5rem; border-radius: 999px; font-size: .85rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #8884; }
+  footer { margin-top: 3rem; color: #888; font-size: .85rem; }
+</style>
+</head>
+<body>
+  <h1>mcp-sandbox</h1>
+  <p class="sub">A public <strong>MCP</strong> server of test fixtures for QA and evals.</p>
+
+  <p>Tools return deliberately distinctive output, so a caller can prove a
+  response came <em>from this server</em> — not from the model's own
+  training/context.</p>
+
+  <p>
+    <span class="pill">streamable HTTP</span>
+    &nbsp; Endpoint: <code id="ep">/mcp</code>
+  </p>
+
+  <h2>Tools</h2>
+  <table>
+    <tr><th>Tool</th><th>Params</th><th>Returns</th></tr>
+    <tr>
+      <td><code>identity</code></td>
+      <td>none</td>
+      <td>A fixed canary token. Seeing it confirms the MCP server answered.</td>
+    </tr>
+  </table>
+
+  <h2>Add to Claude Code</h2>
+  <pre><code>claude mcp add --transport http mcp-sandbox <span class="url">URL</span></code></pre>
+
+  <h2>Add to Claude Desktop</h2>
+  <p>Desktop config is stdio-only, so bridge through <code>mcp-remote</code>
+  (<code>claude_desktop_config.json</code>):</p>
+  <pre><code>{
+  "mcpServers": {
+    "mcp-sandbox": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "<span class="url">URL</span>"]
+    }
+  }
+}</code></pre>
+
+  <h2>Try it</h2>
+  <p>Ask the model:</p>
+  <pre><code>Call the mcp-sandbox `identity` tool and show me what it returned.</code></pre>
+
+  <footer>
+    For evals, assert on the raw tool result rather than the model's prose —
+    the token is stable, the wording isn't.
+  </footer>
+
+<script>
+  // Show the real endpoint/URL this page is served from.
+  const base = location.origin;
+  document.getElementById('ep').textContent = base + '/mcp';
+  document.querySelectorAll('.url').forEach(el => el.textContent = base + '/mcp');
+</script>
+</body>
+</html>
