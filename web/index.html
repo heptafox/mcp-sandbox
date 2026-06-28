@@ -3,74 +3,226 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mcp-sandbox</title>
+<title>mcp-sandbox — Free MCP server for developers and GenAI QA evals</title>
+<meta name="description" content="Free and open MCP (Model Context Protocol) server of test fixtures for developers and GenAI QA evals. Each tool returns a unique canary so you can prove a response came from the server, not the model.">
 <style>
-  :root { color-scheme: light dark; }
-  body { font: 16px/1.6 ui-sans-serif, system-ui, sans-serif; max-width: 760px;
-         margin: 3rem auto; padding: 0 1.25rem; }
-  h1 { margin-bottom: .25rem; }
-  .sub { color: #888; margin-top: 0; }
-  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-  pre { background: #1113; padding: 1rem; border-radius: 8px; overflow-x: auto; }
-  .pill { display: inline-block; background: #2563eb22; color: #2563eb;
-          padding: .1rem .5rem; border-radius: 999px; font-size: .85rem; }
-  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
-  th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #8884; }
-  footer { margin-top: 3rem; color: #888; font-size: .85rem; }
+  :root {
+    --bg: #f7f6f2; --fg: #1f2328; --muted: #6b7280;
+    --accent: #b8860b; --card: #ffffff; --border: #e3e0d8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px;
+    background: var(--bg); color: var(--fg); line-height: 1.6;
+  }
+  header, main, footer { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+  header { padding-top: 32px; }
+  h1 { font-size: 2rem; margin: 0; line-height: 1.2; }
+  .tagline { font-size: 1.15rem; max-width: 760px; margin: 8px 0 16px; }
+  .subtitle { color: var(--muted); font-size: 1.05rem; max-width: 760px; }
+
+  .features {
+    list-style: none; display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 0; margin: 20px 0 4px; font-family: system-ui, sans-serif;
+  }
+  .features li {
+    font-size: 0.82rem; font-weight: 600; color: var(--fg); background: var(--card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px;
+  }
+
+  main { padding-top: 32px; }
+  h2 { font-size: 1.3rem; margin: 32px 0 8px; }
+  section > p { color: var(--muted); font-size: 1rem; max-width: 760px; margin: 0 0 16px; }
+
+  #tools {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px; padding: 4px 0;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px; display: flex; flex-direction: column;
+  }
+  .card h3 {
+    margin: 0 0 6px; font-size: 1.1rem;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  .card .params {
+    font-family: system-ui, sans-serif; font-size: 0.78rem; color: var(--muted);
+    margin: 0 0 10px;
+  }
+  .card p { font-size: 0.9rem; color: var(--fg); margin: 0 0 10px; }
+  .canary {
+    margin-top: auto; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-size: 0.78rem; color: var(--accent); background: #fffaf0;
+    border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px;
+    word-break: break-all;
+  }
+
+  pre {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 0.82rem; line-height: 1.5; color: var(--fg); background: var(--card);
+    border: 1px solid var(--border); border-radius: 8px; padding: 16px;
+    margin: 0 0 16px; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+  }
+  pre code { font-family: inherit; }
+  code { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+
+  .how-qa {
+    font-family: system-ui, sans-serif; background: var(--card);
+    border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;
+  }
+  .qa-row { display: flex; align-items: baseline; gap: 10px; font-size: 0.95rem; margin-bottom: 6px; }
+  .qa-label {
+    flex-shrink: 0; width: 140px; font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted);
+  }
+  .qa-answer {
+    font-weight: 700; color: var(--accent);
+    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 0.85rem;
+  }
+  .qa-note { font-size: 0.85rem; color: var(--muted); margin: 8px 0 0; line-height: 1.5; }
+
+  .auth {
+    background: #fffaf0; border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: 8px; padding: 12px 20px; margin: 16px 0;
+  }
+  .auth h3 { font-size: 1rem; margin: 8px 0; }
+  .auth p { color: var(--muted); font-size: 0.9rem; }
+  .token {
+    display: inline-block; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-weight: 600; color: var(--accent); background: var(--card);
+    border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; word-break: break-all;
+  }
+
+  footer {
+    color: var(--muted); font-family: system-ui, sans-serif; font-size: 0.9rem;
+    margin-top: 56px; padding: 32px 24px 48px; border-top: 1px solid var(--border); text-align: center;
+  }
+  footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 560px) {
+    h1 { font-size: 1.6rem; }
+    .tagline { font-size: 1.05rem; }
+    .qa-row { flex-direction: column; gap: 2px; }
+    .qa-label { width: auto; }
+  }
 </style>
 </head>
 <body>
+<header>
   <h1>mcp-sandbox</h1>
-  <p class="sub">A public <strong>MCP</strong> server of test fixtures for QA and evals.</p>
-
-  <p>Tools return deliberately distinctive output, so a caller can prove a
-  response came <em>from this server</em> — not from the model's own
-  training/context.</p>
-
-  <p>
-    <span class="pill">streamable HTTP</span>
-    &nbsp; Endpoint: <code id="ep">/mcp</code>
+  <p class="tagline">Free and open MCP server for developers and GenAI QA evals.</p>
+  <p class="subtitle">
+    Each tool returns a deliberately distinctive <strong>canary</strong> token — something a
+    model would never volunteer on its own. Seeing it in a response proves the answer came
+    <em>from this server</em>, not from the model's training or context. Ideal for wiring up
+    MCP clients, smoke-testing connectivity, and asserting on tool calls in evals.
   </p>
+  <ul class="features">
+    <li>Free &amp; open</li>
+    <li>Streamable HTTP</li>
+    <li>Bearer-token auth check</li>
+    <li>Stable canary tokens</li>
+  </ul>
+</header>
 
-  <h2>Tools</h2>
-  <table>
-    <tr><th>Tool</th><th>Params</th><th>Returns</th></tr>
-    <tr>
-      <td><code>identity</code></td>
-      <td>none</td>
-      <td>A fixed canary token. Seeing it confirms the MCP server answered.</td>
-    </tr>
-  </table>
+<main>
+  <section>
+    <h2>Tools</h2>
+    <p>Endpoint: <code id="ep">/mcp</code> &nbsp;(no trailing slash).</p>
+    <div id="tools">
+      <div class="card">
+        <h3>identity</h3>
+        <p class="params">params: none</p>
+        <p>Confirms the server is connected. Returns a fixed ID string — show it verbatim.</p>
+        <div class="canary">MCP-SANDBOX canary 7Q9X-ZK42-VORTEX-PARSNIP</div>
+      </div>
+      <div class="card">
+        <h3>echo</h3>
+        <p class="params">params: message: str, repeat: int = 1</p>
+        <p>Sends your text through the server and returns it inside a fixed wrapper, repeated <code>repeat</code> times.</p>
+        <div class="canary">MCP-SANDBOX echo 4F7T-ECHO-START &gt;&gt;&gt; your text &lt;&lt;&lt; 4F7T-ECHO-END</div>
+      </div>
+      <div class="card">
+        <h3>auth_check</h3>
+        <p class="params">params: none (reads Authorization header)</p>
+        <p>Verifies the server saw your <code>Authorization: Bearer &lt;token&gt;</code> header.</p>
+        <div class="canary">MCP-SANDBOX auth OK 9B3K-AUTHED-MARIGOLD</div>
+      </div>
+    </div>
+  </section>
 
-  <h2>Add to Claude Code</h2>
-  <pre><code>claude mcp add --transport http mcp-sandbox <span class="url">URL</span></code></pre>
+  <section>
+    <h2>Integrate</h2>
+    <p>Add to <strong>Claude Code</strong> (one command, with the dev Bearer token):</p>
+    <pre><code>claude mcp add --transport http mcp-sandbox <span class="url">URL</span> \
+  --header "Authorization: Bearer mcp-sandbox-dev-C7H2-KPMERCHANT"</code></pre>
 
-  <h2>Add to Claude Desktop</h2>
-  <p>Desktop config is stdio-only, so bridge through <code>mcp-remote</code>
-  (<code>claude_desktop_config.json</code>):</p>
-  <pre><code>{
+    <p>Add to <strong>Claude Desktop</strong> — config is stdio-only, so bridge through
+    <code>mcp-remote</code> in <code>claude_desktop_config.json</code>:</p>
+    <pre><code>{
   "mcpServers": {
     "mcp-sandbox": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "<span class="url">URL</span>"]
+      "args": [
+        "-y", "mcp-remote", "<span class="url">URL</span>",
+        "--header", "Authorization: Bearer mcp-sandbox-dev-C7H2-KPMERCHANT"
+      ]
     }
   }
 }</code></pre>
 
-  <h2>Try it</h2>
-  <p>Ask the model:</p>
-  <pre><code>Call the mcp-sandbox `identity` tool and show me what it returned.</code></pre>
+    <p>Raw HTTP — call the MCP endpoint directly:</p>
+    <pre><code>curl -X POST <span class="url">URL</span> \
+  -H "Authorization: Bearer mcp-sandbox-dev-C7H2-KPMERCHANT" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call",
+       "params":{"name":"identity","arguments":{}}}'</code></pre>
+  </section>
 
-  <footer>
-    For evals, assert on the raw tool result rather than the model's prose —
-    the token is stable, the wording isn't.
-  </footer>
+  <section>
+    <h2>Prompt &amp; expected response</h2>
+    <p>Once connected, ask the model to call a tool. The model relays the canary verbatim —
+    that exact token is what you assert on.</p>
+    <div class="how-qa">
+      <div class="qa-row"><span class="qa-label">Prompt</span>Call the mcp-sandbox <code>identity</code> tool and show me what it returned.</div>
+      <div class="qa-row"><span class="qa-label">Expected</span>
+        <span class="qa-answer">MCP-SANDBOX canary 7Q9X-ZK42-VORTEX-PARSNIP</span></div>
+      <p class="qa-note">If the token appears, the call reached this server. If the model
+        answers without it, the tool was never invoked.</p>
+    </div>
+    <div class="how-qa">
+      <div class="qa-row"><span class="qa-label">Prompt</span>Call the mcp-sandbox <code>auth_check</code> tool and show the result.</div>
+      <div class="qa-row"><span class="qa-label">Expected</span>
+        <span class="qa-answer">MCP-SANDBOX auth OK 9B3K-AUTHED-MARIGOLD</span></div>
+      <p class="qa-note">Confirms your Bearer token reached the server. Without a valid token
+        you get <code>MCP-SANDBOX auth FAIL 9B3K-NOAUTH-CINDER</code> instead.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Auth — Bearer token</h2>
+    <div class="auth">
+      <h3>Dev token (public, for integration testing)</h3>
+      <p>Send it in the <code>Authorization</code> header. This is a shared smoke-test token,
+        not a secret — it only gates the <code>auth_check</code> tool.</p>
+      <p><span class="token">Authorization: Bearer mcp-sandbox-dev-C7H2-KPMERCHANT</span></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>For evals, assert on the raw tool result rather than the model's prose —
+    the token is stable, the wording isn't.</p>
+</footer>
 
 <script>
-  // Show the real endpoint/URL this page is served from.
-  const base = location.origin;
-  document.getElementById('ep').textContent = base + '/mcp';
-  document.querySelectorAll('.url').forEach(el => el.textContent = base + '/mcp');
+  // Fill in the real endpoint/URL this page is served from.
+  const mcpUrl = location.origin + '/mcp';
+  document.getElementById('ep').textContent = mcpUrl;
+  document.querySelectorAll('.url').forEach(el => el.textContent = mcpUrl);
 </script>
 </body>
 </html>
