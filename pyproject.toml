@@ -1,8 +1,10 @@
 [project]
 name = "mcp-sandbox"
 version = "0.1.0"
-description = "Add your description here"
+description = "Public MCP server of test fixtures for QA and evals."
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
     "fastmcp>=3.4.2",

@@ -47,19 +47,31 @@ List tools, call `identity`, confirm the exact string comes back.
 4. **nginx + TLS**
    ```bash
    sudo apt install -y nginx certbot python3-certbot-nginx
-   # edit deploy/nginx.conf -> set YOUR_DOMAIN, copy to /etc/nginx/sites-available/,
+   # deploy/nginx.conf is set for mcp.heptafox.com; copy to /etc/nginx/sites-available/,
    # symlink into sites-enabled/, then:
-   sudo certbot --nginx -d YOUR_DOMAIN
+   sudo certbot --nginx -d mcp.heptafox.com
    sudo systemctl reload nginx
    ```
 
-Result: `https://YOUR_DOMAIN/mcp`.
+Result: `https://mcp.heptafox.com/mcp`.
 
 ## Verify
 
 ```bash
 systemctl status mcp-sandbox
-curl -i https://YOUR_DOMAIN/mcp        # expect a response from the MCP endpoint
+curl -i https://mcp.heptafox.com/mcp        # expect a response from the MCP endpoint
 ```
 
-Then connect any MCP client to `https://YOUR_DOMAIN/mcp` and call `identity`.
+Then connect any MCP client to `https://mcp.heptafox.com/mcp` and call `identity`.
+
+## Contributing
+
+Contributions welcome. New tools are just `@mcp.tool` functions in `server.py` —
+each should return a unique, improbable canary string (see the tool design
+convention in `CLAUDE.md`). Open an issue or PR.
+
+By contributing you agree your contributions are licensed under Apache-2.0.
+
+## License
+
+[Apache License 2.0](LICENSE).
