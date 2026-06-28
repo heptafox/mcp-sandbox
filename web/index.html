@@ -3,27 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mcp-sandbox — Deterministic MCP server for development & GenAI evaluations</title>
-<meta name="description" content="A deterministic Model Context Protocol server of test fixtures. Every tool returns a stable canary token so you can prove a response came from the server, not the model. Streamable HTTP, Apache-2.0, self-hostable.">
+<title>The Free MCP Sandbox — HeptaFox</title>
+<meta name="description" content="Free MCP sandbox server. Connect any MCP client in under a minute — no auth required. Streamable HTTP.">
 <link rel="canonical" href="https://mcp.heptafox.com/">
 <link rel="icon" type="image/png" href="/mcp-logo.png">
 <meta name="robots" content="index, follow">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mcp.heptafox.com/">
-<meta property="og:title" content="mcp-sandbox — Deterministic MCP server for development & GenAI evaluations">
-<meta property="og:description" content="Deterministic MCP server of test fixtures. Every tool returns a stable canary token so you can prove a response came from the server, not the model.">
+<meta property="og:title" content="The Free MCP Sandbox — HeptaFox">
+<meta property="og:description" content="Connect any MCP client in under a minute. No auth required. Streamable HTTP.">
 <meta property="og:site_name" content="mcp-sandbox">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mcp-sandbox — Deterministic MCP server for development & GenAI evaluations">
-<meta name="twitter:description" content="Deterministic MCP server of test fixtures. Every tool returns a stable canary token so you can prove a response came from the server, not the model.">
+<meta name="twitter:title" content="The Free MCP Sandbox">
+<meta name="twitter:description" content="Connect any MCP client in under a minute. No auth required.">
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "mcp-sandbox",
-  "description": "Deterministic MCP (Model Context Protocol) server of test fixtures. Every tool returns a stable canary token so you can prove a response came from the server, not the model.",
+  "description": "Free MCP sandbox server. Connect any MCP client in under a minute — no authentication required.",
   "url": "https://mcp.heptafox.com/",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
@@ -35,7 +35,7 @@
     --bg: #f6f7f9; --card: #ffffff; --fg: #14181f; --muted: #5b6573;
     --accent: #b8860b; --accent-ink: #8a6508; --accent-soft: #fff8ea;
     --border: #e2e5ea; --code-bg: #1d2026; --code-fg: #e7e9ee;
-    --ok: #1a7f4b; --radius: 10px; --maxw: 1000px;
+    --ok: #1a7f4b; --radius: 10px; --maxw: 900px;
   }
   * { box-sizing: border-box; }
   body {
@@ -45,17 +45,16 @@
   }
   .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
   a { color: var(--accent-ink); }
-  code, pre, .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+  code, pre { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
   h1, h2, h3 { letter-spacing: -0.01em; }
 
-  /* ---- header ---- */
+  /* header */
   header { border-bottom: 1px solid var(--border); background: var(--card); }
-  .head-top { display: flex; align-items: center; gap: 12px; padding: 16px 0 12px; }
-  .brand { font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+  .head-inner { display: flex; align-items: center; gap: 12px; padding: 16px 0; }
+  .brand { font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--fg); }
   .brand .dot { color: var(--accent); }
   .brand img { border-radius: 6px; }
-  .head-top .tag { color: var(--muted); font-size: 0.9rem; margin-left: 2px; }
-  .head-top .spacer { flex: 1; }
+  .spacer { flex: 1; }
   .github-link {
     display: inline-flex; align-items: center; gap: 7px; font-size: 0.85rem; font-weight: 600;
     color: var(--fg); text-decoration: none; background: var(--bg);
@@ -64,19 +63,67 @@
   .github-link:hover { border-color: var(--accent); color: var(--accent-ink); }
   .gh-stat { color: var(--muted); }
   .gh-stat[hidden] { display: none; }
-  @media (max-width: 620px) { .head-top .tag { display: none; } }
 
-  /* endpoint bar */
-  .epbar { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; padding: 4px 0 18px; }
-  .epfield { display: flex; flex-direction: column; gap: 3px; }
-  .epfield .k { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-  .epfield .v { font-size: 0.92rem; font-weight: 600; }
-  .ep-main { flex: 1 1 320px; }
-  .ep-input { display: flex; align-items: stretch; }
-  .ep-input code {
-    flex: 1; background: var(--code-bg); color: var(--code-fg); padding: 9px 12px;
-    border-radius: var(--radius) 0 0 var(--radius); font-size: 0.92rem; overflow-x: auto; white-space: nowrap;
+  /* hero */
+  .hero { padding: 52px 0 40px; }
+  .hero h1 { font-size: 2.2rem; font-weight: 800; margin: 0 0 10px; }
+  .hero-sub { font-size: 1.05rem; color: var(--muted); margin: 0 0 32px; }
+
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px 32px; align-items: flex-end; margin-bottom: 22px; }
+  .metafield { display: flex; flex-direction: column; gap: 4px; }
+  .metafield .k { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  .metafield .v { font-size: 0.92rem; font-weight: 600; }
+  .metafield.ep-field { flex: 1 1 280px; }
+  .ep-display {
+    display: flex; align-items: stretch;
   }
+  .ep-display code {
+    flex: 1; background: var(--code-bg); color: var(--code-fg); padding: 10px 14px;
+    border-radius: var(--radius); font-size: 0.92rem; overflow-x: auto; white-space: nowrap;
+  }
+
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--accent); color: #fff; border: none; cursor: pointer;
+    font: inherit; font-size: 0.9rem; font-weight: 600;
+    padding: 10px 18px; border-radius: var(--radius); text-decoration: none;
+  }
+  .btn-primary:hover { background: var(--accent-ink); }
+  .btn-primary.copied { background: var(--ok); }
+  .btn-secondary {
+    display: inline-flex; align-items: center;
+    background: var(--card); color: var(--fg); border: 1px solid var(--border);
+    font: inherit; font-size: 0.9rem; font-weight: 600;
+    padding: 10px 18px; border-radius: var(--radius); text-decoration: none;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent-ink); }
+
+  /* sections */
+  section { padding: 36px 0; border-top: 1px solid var(--border); }
+  h2 { font-size: 1.15rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: 0.9rem; margin: 0 0 20px; }
+
+  /* tool cards */
+  .tool-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .tool-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 20px 16px; }
+  .tool-card .tname { font-family: ui-monospace, Menlo, monospace; font-size: 1rem; font-weight: 700; color: var(--accent-ink); margin: 0 0 4px; }
+  .tool-card .purpose { color: var(--muted); font-size: 0.88rem; margin: 0 0 14px; }
+  .tool-card .lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 0 0 5px; }
+  .tool-card pre { margin: 0 0 10px; border-radius: 7px; }
+  .tool-card .ret { font-family: ui-monospace, Menlo, monospace; font-size: 0.8rem; color: var(--accent-ink); background: var(--accent-soft); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px; word-break: break-all; }
+
+  /* connect cards */
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .card .ch { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .card .ch h3 { margin: 0; font-size: 0.92rem; }
+  .span-all { grid-column: 1 / -1; }
+  pre {
+    margin: 0; background: var(--code-bg); color: var(--code-fg);
+    font-size: 0.8rem; line-height: 1.5; padding: 14px; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+  }
+  pre .url { color: #e0b25a; }
   .copy {
     border: none; cursor: pointer; font: inherit; font-size: 0.82rem; font-weight: 600;
     background: var(--accent); color: #fff; padding: 0 14px; border-radius: 0 var(--radius) var(--radius) 0;
@@ -84,81 +131,34 @@
   }
   .copy:hover { background: var(--accent-ink); }
   .copy.copied { background: var(--ok); }
-
-  /* ---- status panel ---- */
-  .status { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 0; }
-  .status li {
-    list-style: none; font-size: 0.8rem; font-weight: 600; color: var(--fg);
-    background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px;
-  }
-  .status li::before { content: "✓ "; color: var(--ok); font-weight: 800; }
-  .status ul { display: contents; margin: 0; padding: 0; }
-
-  /* ---- sections ---- */
-  section { padding: 30px 0; border-top: 1px solid var(--border); }
-  h2 { font-size: 1.15rem; margin: 0 0 4px; }
-  .sub { color: var(--muted); font-size: 0.9rem; margin: 0 0 18px; }
-
-  /* connect cards */
-  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-  .card .ch { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-  .card .ch h3 { margin: 0; font-size: 0.92rem; }
   .card .ch .copy { border-radius: 7px; padding: 4px 11px; }
-  pre {
-    margin: 0; background: var(--code-bg); color: var(--code-fg);
-    font-size: 0.8rem; line-height: 1.5; padding: 14px; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
-  }
-  pre .url, pre .tok { color: #e0b25a; }
-  .span-all { grid-column: 1 / -1; }
 
-  /* tools */
-  .tool { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; }
-  .tool > summary {
-    list-style: none; cursor: pointer; display: grid;
-    grid-template-columns: 1.4fr 1fr 1.3fr 2fr auto; gap: 12px; align-items: center;
-    padding: 12px 16px; font-size: 0.88rem;
-  }
-  .tool > summary::-webkit-details-marker { display: none; }
-  .tool > summary .tname { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--accent-ink); }
-  .tool > summary .col-h { display: block; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 2px; }
-  .tool > summary .chev { color: var(--muted); transition: transform .15s; }
-  .tool[open] > summary .chev { transform: rotate(90deg); }
-  .tool .body { border-top: 1px solid var(--border); padding: 14px 16px; }
-  .tool .body .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 0 0 6px; }
-  .tool .body .ret { font-family: ui-monospace, Menlo, monospace; font-size: 0.8rem; color: var(--accent-ink); background: var(--accent-soft); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px; word-break: break-all; margin-bottom: 14px; }
-  .tools-head { display: grid; grid-template-columns: 1.4fr 1fr 1.3fr 2fr auto; gap: 12px; padding: 0 16px 8px; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-  @media (max-width: 680px) {
-    .tools-head { display: none; }
-    .tool > summary { grid-template-columns: 1fr auto; }
-    .tool > summary .cell:not(.cell-name) { display: none; }
-    .tool > summary .col-h { display: inline; }
-  }
-
-  /* callout / auth */
+  /* auth */
   .callout { background: var(--accent-soft); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 14px 16px; }
   .callout p { margin: 0 0 10px; font-size: 0.9rem; }
   .callout p:last-child { margin-bottom: 0; }
-  .pill-warn { display: inline-block; font-size: 0.68rem; font-weight: 700; color: #b3261e; background: #fdecea; border: 1px solid #f6c9c4; border-radius: 999px; padding: 2px 9px; vertical-align: middle; }
   .token-row { display: flex; align-items: stretch; max-width: 560px; }
   .token-row code { flex: 1; background: var(--code-bg); color: var(--code-fg); padding: 9px 12px; border-radius: var(--radius) 0 0 var(--radius); font-size: 0.82rem; overflow-x: auto; white-space: nowrap; }
   .token-row .copy { border-radius: 0 var(--radius) var(--radius) 0; }
-
+  .pill-warn { display: inline-block; font-size: 0.68rem; font-weight: 700; color: #b3261e; background: #fdecea; border: 1px solid #f6c9c4; border-radius: 999px; padding: 2px 9px; vertical-align: middle; }
   .note { font-size: 0.82rem; color: var(--muted); margin-top: 12px; }
 
   footer { border-top: 1px solid var(--border); padding: 22px 0 36px; color: var(--muted); font-size: 0.85rem; }
   footer .links { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
   footer a { font-weight: 600; text-decoration: none; }
   footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.7rem; }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div class="wrap">
-    <div class="head-top">
-      <span class="brand"><img src="/mcp-logo.png" alt="" width="24" height="24">mcp<span class="dot">·</span>sandbox</span>
-      <span class="tag">Deterministic MCP server for development &amp; GenAI evaluations</span>
+    <div class="head-inner">
+      <a class="brand" href="/"><img src="/mcp-logo.png" alt="" width="24" height="24">mcp<span class="dot">·</span>sandbox</a>
       <span class="spacer"></span>
       <a class="github-link" href="https://github.com/heptafox/mcp-sandbox" target="_blank" rel="noopener" aria-label="View on GitHub">
         <svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
@@ -167,139 +167,100 @@
         <span class="gh-stat" id="gh-forks" title="Forks" hidden></span>
       </a>
     </div>
-
-    <div class="epbar">
-      <div class="epfield ep-main">
-        <span class="k">Endpoint</span>
-        <span class="ep-input"><code id="ep">/mcp</code><button class="copy" data-copy="#ep">Copy</button></span>
-      </div>
-      <div class="epfield"><span class="k">Transport</span><span class="v">Streamable HTTP</span></div>
-      <div class="epfield"><span class="k">Auth</span><span class="v">Bearer (auth_check only)</span></div>
-      <div class="epfield"><span class="k">License</span><span class="v">Apache-2.0</span></div>
-    </div>
-
-    <ul class="status">
-      <li>Transport: Streamable HTTP</li>
-      <li>Protocol: MCP</li>
-      <li>Endpoint: /mcp</li>
-      <li>Auth: Bearer (auth_check only)</li>
-      <li>License: Apache-2.0</li>
-      <li>Open source</li>
-      <li>Self-hostable</li>
-    </ul>
   </div>
 </header>
 
 <main class="wrap">
 
-  <!-- CONNECT -->
+  <div class="hero">
+    <h1>The Free MCP Sandbox</h1>
+    <p class="hero-sub">Test any MCP client in under a minute.</p>
+
+    <div class="meta-row">
+      <div class="metafield ep-field">
+        <span class="k">Endpoint</span>
+        <div class="ep-display">
+          <code id="ep">/mcp</code>
+        </div>
+      </div>
+      <div class="metafield">
+        <span class="k">Protocol</span>
+        <span class="v">Streamable HTTP</span>
+      </div>
+      <div class="metafield">
+        <span class="k">Authentication</span>
+        <span class="v">None</span>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn-primary" id="copy-ep-btn">Copy Endpoint</button>
+      <a class="btn-secondary" id="inspector-link" href="#" target="_blank" rel="noopener">Open in MCP Inspector ↗</a>
+    </div>
+  </div>
+
+  <section id="tools">
+    <h2>Available Tools — No Authentication Required</h2>
+    <p class="sub">Use these to verify your connection, tool invocation, and JSON serialization.</p>
+    <div class="tool-grid">
+
+      <div class="tool-card">
+        <p class="tname">identity</p>
+        <p class="purpose">Returns server information. No parameters.</p>
+        <p class="lbl">Response</p>
+        <div class="ret">MCP-SANDBOX canary 7Q9X-ZK42-VORTEX-PARSNIP</div>
+      </div>
+
+      <div class="tool-card">
+        <p class="tname">echo</p>
+        <p class="purpose">Returns exactly what was sent.</p>
+        <p class="lbl">Input</p>
+        <pre>{"message": "Hello MCP", "repeat": 1}</pre>
+        <p class="lbl">Response</p>
+        <div class="ret">MCP-SANDBOX echo 4F7T-ECHO-START &gt;&gt;&gt; Hello MCP &lt;&lt;&lt; 4F7T-ECHO-END</div>
+      </div>
+
+    </div>
+  </section>
+
   <section id="connect">
     <h2>Connect</h2>
-    <p class="sub">Pick a client. URLs below are filled in live from this page's address.</p>
+    <p class="sub">URLs below are filled in from this page's address.</p>
     <div class="grid">
       <div class="card">
         <div class="ch"><h3>Claude Code</h3><button class="copy" data-copy="#cc">Copy</button></div>
-        <pre id="cc"><code>claude mcp add --transport http mcp-sandbox <span class="url">URL</span> \
-  --header "Authorization: Bearer <span class="tok">mcp-sandbox-dev-C7H2-KPMERCHANT</span>"</code></pre>
+        <pre id="cc">claude mcp add --transport http mcp-sandbox <span class="url">URL</span></pre>
       </div>
       <div class="card">
         <div class="ch"><h3>Claude Desktop</h3><button class="copy" data-copy="#cd">Copy</button></div>
-        <pre id="cd"><code>{
+        <pre id="cd">{
   "mcpServers": {
     "mcp-sandbox": {
       "command": "npx",
-      "args": [
-        "-y", "mcp-remote", "<span class="url">URL</span>",
-        "--header", "Authorization: Bearer <span class="tok">mcp-sandbox-dev-C7H2-KPMERCHANT</span>"
-      ]
+      "args": ["-y", "mcp-remote", "<span class="url">URL</span>"]
     }
   }
-}</code></pre>
+}</pre>
       </div>
       <div class="card span-all">
-        <div class="ch"><h3>Raw HTTP</h3><button class="copy" data-copy="#raw">Copy</button></div>
-        <pre id="raw"><code>curl -X POST <span class="url">URL</span> \
-  -H "Authorization: Bearer <span class="tok">mcp-sandbox-dev-C7H2-KPMERCHANT</span>" \
+        <div class="ch"><h3>Raw HTTP (curl)</h3><button class="copy" data-copy="#raw">Copy</button></div>
+        <pre id="raw">curl -X POST <span class="url">URL</span> \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call",
-       "params":{"name":"identity","arguments":{}}}'</code></pre>
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"identity","arguments":{}}}'</pre>
       </div>
     </div>
-    <p class="note">⚠️ Endpoint is <code>/mcp</code> with <strong>no trailing slash</strong> — <code>/mcp/</code> 307-redirects to <code>/mcp</code> and some clients drop the POST body across the redirect.</p>
+    <p class="note">⚠️ Use <code>/mcp</code> with no trailing slash — some clients drop the POST body across a 307 redirect.</p>
   </section>
 
-  <!-- TOOLS -->
-  <section id="tools">
-    <h2>Tools</h2>
-    <p class="sub">Each tool returns a fixed canary token. Click a row to see an example.</p>
-    <div class="tools-head"><span>Tool</span><span>Auth</span><span>Params</span><span>Returns</span><span></span></div>
-
-    <details class="tool">
-      <summary>
-        <span class="cell cell-name"><span class="col-h">Tool</span><span class="tname">identity</span></span>
-        <span class="cell"><span class="col-h">Auth</span>No auth</span>
-        <span class="cell"><span class="col-h">Params</span>—</span>
-        <span class="cell"><span class="col-h">Returns</span>canary token</span>
-        <span class="chev">›</span>
-      </summary>
-      <div class="body">
-        <p class="lbl">Returns</p>
-        <div class="ret">MCP-SANDBOX canary 7Q9X-ZK42-VORTEX-PARSNIP</div>
-        <p class="lbl">Example call</p>
-        <pre><code>{"method":"tools/call","params":{"name":"identity","arguments":{}}}</code></pre>
-      </div>
-    </details>
-
-    <details class="tool">
-      <summary>
-        <span class="cell cell-name"><span class="col-h">Tool</span><span class="tname">echo</span></span>
-        <span class="cell"><span class="col-h">Auth</span>No auth</span>
-        <span class="cell"><span class="col-h">Params</span>message, repeat</span>
-        <span class="cell"><span class="col-h">Returns</span>echoed message</span>
-        <span class="chev">›</span>
-      </summary>
-      <div class="body">
-        <p class="lbl">Returns</p>
-        <div class="ret">MCP-SANDBOX echo 4F7T-ECHO-START &gt;&gt;&gt; your text &lt;&lt;&lt; 4F7T-ECHO-END</div>
-        <p class="lbl">Params: <code>message: str</code>, <code>repeat: int = 1</code></p>
-        <pre><code>{"method":"tools/call","params":{"name":"echo","arguments":{"message":"hi","repeat":2}}}</code></pre>
-      </div>
-    </details>
-
-    <details class="tool">
-      <summary>
-        <span class="cell cell-name"><span class="col-h">Tool</span><span class="tname">auth_check</span></span>
-        <span class="cell"><span class="col-h">Auth</span>Bearer token</span>
-        <span class="cell"><span class="col-h">Params</span>—</span>
-        <span class="cell"><span class="col-h">Returns</span>auth status</span>
-        <span class="chev">›</span>
-      </summary>
-      <div class="body">
-        <p class="lbl">Returns (valid token)</p>
-        <div class="ret">MCP-SANDBOX auth OK 9B3K-AUTHED-MARIGOLD</div>
-        <p class="lbl">Returns (missing / wrong token)</p>
-        <div class="ret">MCP-SANDBOX auth FAIL 9B3K-NOAUTH-CINDER</div>
-        <p class="lbl">Reads the <code>Authorization: Bearer &lt;token&gt;</code> header</p>
-        <pre><code>{"method":"tools/call","params":{"name":"auth_check","arguments":{}}}</code></pre>
-      </div>
-    </details>
-  </section>
-
-  <!-- CANARY -->
-  <section id="canary">
-    <h2>Canary tokens</h2>
-    <p class="sub">Every tool returns a stable canary token. If the token appears in the response, your MCP client successfully executed the tool — these deterministic responses are ideal for automated assertions on the raw tool result (<code>result.content[0].text</code>), not the model's prose.</p>
-  </section>
-
-  <!-- AUTH -->
   <section id="auth">
-    <h2>Authentication</h2>
-    <p class="sub">Only <code>auth_check</code> is gated, by a development Bearer token.</p>
+    <h2>Need More Tools?</h2>
+    <p class="sub">Add a Bearer token to test authenticated tool calls. The <code>auth_check</code> tool verifies your token is being forwarded correctly.</p>
     <div class="callout">
-      <p>This token is <strong>public</strong>, intended for integration testing, and is <strong>not a production credential</strong>. <span class="pill-warn">public · test only</span></p>
+      <p>This token is <strong>public</strong> and intended for integration testing only. <span class="pill-warn">public · test only</span></p>
       <div class="token-row"><code id="tok">Authorization: Bearer mcp-sandbox-dev-C7H2-KPMERCHANT</code><button class="copy" data-copy="#tok">Copy</button></div>
     </div>
+    <p class="note">Add <code>--header "Authorization: Bearer &lt;token&gt;"</code> to your MCP client config to use authenticated tools.</p>
   </section>
 
 </main>
@@ -308,22 +269,30 @@
   <div class="wrap">
     <div class="links">
       <a href="https://github.com/heptafox/mcp-sandbox" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://github.com/heptafox/mcp-sandbox#readme" target="_blank" rel="noopener">Documentation</a>
-      <a href="https://github.com/heptafox/mcp-sandbox/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+      <a href="https://github.com/heptafox/mcp-sandbox#readme" target="_blank" rel="noopener">Docs</a>
       <a href="https://github.com/heptafox/mcp-sandbox/blob/main/LICENSE" target="_blank" rel="noopener">Apache-2.0</a>
     </div>
-    <p>Open source · self-hostable · assert on the raw tool result, not the model's prose.</p>
+    <p>Open source · self-hostable</p>
   </div>
 </footer>
 
 <script>
-  // Fill in the real endpoint/URL this page is served from.
   const mcpUrl = location.origin + '/mcp';
   document.getElementById('ep').textContent = mcpUrl;
   document.querySelectorAll('.url').forEach(el => el.textContent = mcpUrl);
+  document.getElementById('inspector-link').href =
+    'https://inspector.modelcontextprotocol.io/?url=' + encodeURIComponent(mcpUrl);
 
-  // Copy buttons: copy the innerText of the element matched by data-copy.
-  document.querySelectorAll('.copy').forEach(btn => {
+  const copyEpBtn = document.getElementById('copy-ep-btn');
+  copyEpBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(mcpUrl).then(() => {
+      copyEpBtn.textContent = 'Copied!';
+      copyEpBtn.classList.add('copied');
+      setTimeout(() => { copyEpBtn.textContent = 'Copy Endpoint'; copyEpBtn.classList.remove('copied'); }, 1200);
+    });
+  });
+
+  document.querySelectorAll('.copy[data-copy]').forEach(btn => {
     btn.addEventListener('click', () => {
       const el = document.querySelector(btn.getAttribute('data-copy'));
       navigator.clipboard.writeText(el.innerText.trim()).then(() => {
@@ -334,7 +303,6 @@
     });
   });
 
-  // Live GitHub star/fork counts.
   fetch('https://api.github.com/repos/heptafox/mcp-sandbox')
     .then(r => r.json())
     .then(d => {
