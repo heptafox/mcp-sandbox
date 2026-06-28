@@ -3,27 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mcp-sandbox — Free MCP server for developers and GenAI QA evals</title>
-<meta name="description" content="Free and open MCP (Model Context Protocol) server of test fixtures for developers and GenAI QA evals. Each tool returns a unique canary so you can prove a response came from the server, not the model.">
+<title>mcp-sandbox — Free MCP Server for Developers & GenAI Evaluations</title>
+<meta name="description" content="Free and open MCP (Model Context Protocol) server of test fixtures for developers and GenAI QA evals. Every tool returns a stable canary token so you can prove a response came from the MCP server, not the model. Works with Claude Desktop, Claude Code, Cursor, Google ADK, LangChain, CrewAI and any MCP client.">
 <link rel="canonical" href="https://mcp.heptafox.com/">
+<link rel="icon" type="image/png" href="/mcp-logo.png">
 <meta name="robots" content="index, follow">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mcp.heptafox.com/">
-<meta property="og:title" content="mcp-sandbox — Free MCP server for developers and GenAI QA evals">
-<meta property="og:description" content="Free and open MCP server of test fixtures. Each tool returns a unique canary so you can prove a response came from the server, not the model.">
+<meta property="og:title" content="mcp-sandbox — Free MCP Server for Developers & GenAI Evaluations">
+<meta property="og:description" content="Free and open MCP server of test fixtures. Every tool returns a stable canary token so you can prove a response came from the server, not the model.">
 <meta property="og:site_name" content="mcp-sandbox">
 
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mcp-sandbox — Free MCP server for developers and GenAI QA evals">
-<meta name="twitter:description" content="Free and open MCP server of test fixtures. Each tool returns a unique canary so you can prove a response came from the server, not the model.">
+<meta name="twitter:title" content="mcp-sandbox — Free MCP Server for Developers & GenAI Evaluations">
+<meta name="twitter:description" content="Free and open MCP server of test fixtures. Every tool returns a stable canary token so you can prove a response came from the server, not the model.">
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "mcp-sandbox",
-  "description": "Free and open MCP (Model Context Protocol) server of test fixtures for developers and GenAI QA evals. Each tool returns a unique canary so you can prove a response came from the server, not the model.",
+  "description": "Free and open MCP (Model Context Protocol) server of test fixtures for developers and GenAI QA evals. Every tool returns a stable canary token so you can prove a response came from the server, not the model.",
   "url": "https://mcp.heptafox.com/",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
@@ -32,215 +33,458 @@
 </script>
 <style>
   :root {
-    --bg: #f7f6f2; --fg: #1f2328; --muted: #6b7280;
-    --accent: #b8860b; --card: #ffffff; --border: #e3e0d8;
+    --bg: #f7f6f2; --bg-soft: #fbfaf7; --fg: #1f2328; --muted: #6b7280;
+    --accent: #b8860b; --accent-soft: #fffaf0; --accent-ink: #8a6508;
+    --card: #ffffff; --border: #e3e0d8; --ok: #1a7f4b; --fail: #b3261e;
+    --radius: 12px; --maxw: 980px;
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 18px;
-    background: var(--bg); color: var(--fg); line-height: 1.6;
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 17px; background: var(--bg); color: var(--fg); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
-  header, main, footer { max-width: 920px; margin: 0 auto; padding: 0 24px; }
-  header { padding-top: 32px; }
-  h1 { font-size: 2rem; margin: 0; line-height: 1.2; }
-  .tagline { font-size: 1.15rem; max-width: 760px; margin: 8px 0 16px; }
-  .subtitle { color: var(--muted); font-size: 1.05rem; max-width: 760px; }
-
-  .features {
-    list-style: none; display: flex; flex-wrap: wrap; gap: 8px;
-    padding: 0; margin: 20px 0 4px; font-family: system-ui, sans-serif;
-  }
-  .features li {
-    font-size: 0.82rem; font-weight: 600; color: var(--fg); background: var(--card);
-    border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px;
-  }
-
-  main { padding-top: 32px; }
-  h2 { font-size: 1.3rem; margin: 32px 0 8px; }
-  section > p { color: var(--muted); font-size: 1rem; max-width: 760px; margin: 0 0 16px; }
-
-  #tools {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px; padding: 4px 0;
-  }
-  .card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-    padding: 18px; display: flex; flex-direction: column;
-  }
-  .card h3 {
-    margin: 0 0 6px; font-size: 1.1rem;
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  a { color: var(--accent-ink); }
+  code, pre, .mono {
     font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   }
-  .card .params {
-    font-family: system-ui, sans-serif; font-size: 0.78rem; color: var(--muted);
-    margin: 0 0 10px;
+
+  /* ---- top nav ---- */
+  .nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(247,246,242,0.85); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
   }
-  .card p { font-size: 0.9rem; color: var(--fg); margin: 0 0 10px; }
+  .nav .wrap { display: flex; align-items: center; gap: 16px; height: 60px; }
+  .brand { font-weight: 800; font-size: 1.05rem; letter-spacing: -0.01em; }
+  .brand .dot { color: var(--accent); }
+  .nav-links { margin-left: auto; display: flex; align-items: center; gap: 22px; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.92rem; font-weight: 500; }
+  .nav-links a:hover { color: var(--accent-ink); }
+  .github-link {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600;
+    color: var(--fg); text-decoration: none; background: var(--card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px;
+  }
+  .github-link:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .github-link svg { flex-shrink: 0; }
+  .gh-stat { color: var(--muted); }
+  .gh-stat[hidden] { display: none; }
+  @media (max-width: 700px) { .nav-links .nav-only { display: none; } }
+
+  /* ---- hero ---- */
+  .hero { padding: 72px 0 48px; text-align: center; }
+  .eyebrow {
+    display: inline-block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft);
+    border: 1px solid var(--border); border-radius: 999px; padding: 5px 14px; margin-bottom: 20px;
+  }
+  h1 { font-size: clamp(2.1rem, 5vw, 3.1rem); margin: 0 0 16px; line-height: 1.08; letter-spacing: -0.025em; }
+  h1 .grad { color: var(--accent); }
+  .tagline { font-size: clamp(1.1rem, 2.4vw, 1.35rem); max-width: 720px; margin: 0 auto 16px; }
+  .subtitle { color: var(--muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto 32px; }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 600;
+    text-decoration: none; border-radius: 999px; padding: 11px 22px; border: 1px solid var(--border);
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-ink); }
+  .btn-ghost { background: var(--card); color: var(--fg); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent-ink); }
+
+  .badges { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 0; margin: 0; }
+  .badges li {
+    font-size: 0.82rem; font-weight: 600; color: var(--fg); background: var(--card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px;
+  }
+  .badges li::before { content: "✓ "; color: var(--accent); font-weight: 800; }
+
+  /* ---- sections ---- */
+  section { padding: 44px 0; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
+  .sec-head { max-width: 720px; margin: 0 0 28px; }
+  h2 { font-size: clamp(1.5rem, 3vw, 1.9rem); margin: 0 0 10px; letter-spacing: -0.02em; }
+  .lead { color: var(--muted); font-size: 1.05rem; margin: 0; }
+
+  .grid { display: grid; gap: 18px; }
+  .grid-3 { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 22px; display: flex; flex-direction: column;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 1.08rem; }
+  .card .ico { font-size: 1.5rem; margin-bottom: 10px; }
+  .card p { font-size: 0.95rem; color: var(--muted); margin: 0; }
+
+  /* tool cards */
+  .tool h3 { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 1.1rem; }
+  .tool .params {
+    font-size: 0.78rem; color: var(--muted); margin: 0 0 12px;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  .tool > p { font-size: 0.92rem; color: var(--fg); margin: 0 0 14px; }
   .canary {
     margin-top: auto; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
-    font-size: 0.78rem; color: var(--accent); background: #fffaf0;
-    border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px;
-    word-break: break-all;
+    font-size: 0.78rem; color: var(--accent-ink); background: var(--accent-soft);
+    border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; word-break: break-all;
   }
+  .canary .lbl { display: block; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
 
+  /* chips (clients) */
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    font-size: 0.9rem; font-weight: 500; color: var(--fg); background: var(--card);
+    border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px;
+  }
+  .chip strong { font-weight: 700; }
+
+  /* table */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--border); }
+  thead th { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--bg-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+  td .lvl { display: inline-flex; width: 26px; height: 26px; align-items: center; justify-content: center; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); font-weight: 800; font-size: 0.82rem; }
+  td code { font-size: 0.9rem; }
+
+  /* code blocks */
   pre {
-    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-    font-size: 0.82rem; line-height: 1.5; color: var(--fg); background: var(--card);
-    border: 1px solid var(--border); border-radius: 8px; padding: 16px;
-    margin: 0 0 16px; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-size: 0.84rem; line-height: 1.55; color: #f4f3ee; background: #25272b;
+    border: 1px solid #34373c; border-radius: 10px; padding: 16px 18px;
+    margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
   }
-  pre code { font-family: inherit; }
-  code { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+  pre code { font-family: inherit; color: inherit; }
+  pre .url, pre .tok { color: #e0b25a; }
+  .code-card h3 { margin: 0 0 12px; font-size: 1.02rem; }
+  .code-card .pre-label { font-size: 0.8rem; color: var(--muted); margin: 0 0 10px; }
+  :not(pre) > code {
+    font-size: 0.88em; background: var(--card); border: 1px solid var(--border);
+    border-radius: 5px; padding: 1px 6px;
+  }
 
-  .how-qa {
-    font-family: system-ui, sans-serif; background: var(--card);
-    border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;
-  }
-  .qa-row { display: flex; align-items: baseline; gap: 10px; font-size: 0.95rem; margin-bottom: 6px; }
-  .qa-label {
-    flex-shrink: 0; width: 140px; font-size: 0.72rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted);
-  }
-  .qa-answer {
-    font-weight: 700; color: var(--accent);
-    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 0.85rem;
-  }
-  .qa-note { font-size: 0.85rem; color: var(--muted); margin: 8px 0 0; line-height: 1.5; }
+  /* prompt → response flow */
+  .flow { display: grid; gap: 14px; }
+  .flow-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+  .flow-row { display: flex; gap: 14px; align-items: flex-start; padding: 7px 0; }
+  .flow-row + .flow-row { border-top: 1px dashed var(--border); }
+  .flow-label { flex: 0 0 96px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+  .flow-val { font-size: 0.95rem; }
+  .flow-val.answer { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-weight: 700; color: var(--ok); font-size: 0.88rem; word-break: break-all; }
+  .flow-val.why { color: var(--muted); font-size: 0.9rem; }
+  .flow-arrow { text-align: center; color: var(--accent); font-size: 1.1rem; line-height: 1; }
 
-  .auth {
-    background: #fffaf0; border: 1px solid var(--border); border-left: 4px solid var(--accent);
-    border-radius: 8px; padding: 12px 20px; margin: 16px 0;
+  /* callout / auth */
+  .callout {
+    background: var(--accent-soft); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: 10px; padding: 18px 22px;
   }
-  .auth h3 { font-size: 1rem; margin: 8px 0; }
-  .auth p { color: var(--muted); font-size: 0.9rem; }
+  .callout h3 { margin: 0 0 8px; font-size: 1.05rem; }
+  .callout p { margin: 0 0 10px; color: var(--fg); font-size: 0.95rem; }
+  .callout p:last-child { margin-bottom: 0; }
   .token {
     display: inline-block; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
-    font-weight: 600; color: var(--accent); background: var(--card);
-    border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; word-break: break-all;
+    font-weight: 600; color: var(--accent-ink); background: var(--card);
+    border: 1px solid var(--border); border-radius: 7px; padding: 6px 11px; word-break: break-all;
   }
+  .pill-warn { display: inline-block; font-size: 0.72rem; font-weight: 700; color: var(--fail); background: #fdecea; border: 1px solid #f6c9c4; border-radius: 999px; padding: 2px 10px; }
 
-  footer {
-    color: var(--muted); font-family: system-ui, sans-serif; font-size: 0.9rem;
-    margin-top: 56px; padding: 32px 24px 48px; border-top: 1px solid var(--border); text-align: center;
-  }
-  footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .note { font-size: 0.9rem; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--border); margin-top: 12px; padding: 40px 0 56px; text-align: center; color: var(--muted); font-size: 0.92rem; }
+  footer a { font-weight: 600; text-decoration: none; }
   footer a:hover { text-decoration: underline; }
+  footer .foot-links { margin-bottom: 12px; display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
 
   @media (max-width: 560px) {
-    h1 { font-size: 1.6rem; }
-    .tagline { font-size: 1.05rem; }
-    .qa-row { flex-direction: column; gap: 2px; }
-    .qa-label { width: auto; }
+    .flow-row { flex-direction: column; gap: 3px; }
+    .flow-label { flex-basis: auto; }
   }
 </style>
 </head>
 <body>
-<header>
-  <h1>mcp-sandbox</h1>
-  <p class="tagline">Free and open MCP server for developers and GenAI QA evals.</p>
-  <p class="subtitle">
-    Each tool returns a deliberately distinctive <strong>canary</strong> token — something a
-    model would never volunteer on its own. Seeing it in a response proves the answer came
-    <em>from this server</em>, not from the model's training or context. Ideal for wiring up
-    MCP clients, smoke-testing connectivity, and asserting on tool calls in evals.
-  </p>
-  <ul class="features">
-    <li>Free &amp; open</li>
-    <li>Streamable HTTP</li>
-    <li>Bearer-token auth check</li>
-    <li>Stable canary tokens</li>
-  </ul>
+
+<nav class="nav">
+  <div class="wrap">
+    <span class="brand"><img src="/mcp-logo.png" alt="" width="26" height="26" style="vertical-align:-6px;margin-right:8px;border-radius:6px;">mcp<span class="dot">·</span>sandbox</span>
+    <div class="nav-links">
+      <a class="nav-only" href="#why">Why</a>
+      <a class="nav-only" href="#tools">Tools</a>
+      <a class="nav-only" href="#integrate">Connect</a>
+      <a class="nav-only" href="#contribute">Contribute</a>
+      <a class="github-link" href="https://github.com/heptafox/mcp-sandbox" target="_blank" rel="noopener"
+         aria-label="View mcp-sandbox on GitHub" title="View on GitHub">
+        <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        <span>GitHub</span>
+        <span class="gh-stat" id="gh-stars" title="Stars" hidden></span>
+        <span class="gh-stat" id="gh-forks" title="Forks" hidden></span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Model Context Protocol · Test Fixtures</span>
+    <h1>The free, open <span class="grad">MCP sandbox</span><br>for developers &amp; GenAI evaluations</h1>
+    <p class="tagline">
+      Every tool returns a stable <strong>canary token</strong> — proof the MCP server was
+      actually invoked, not the model improvising.
+    </p>
+    <p class="subtitle">
+      A deterministic Model Context Protocol server you can point any MCP client at to learn MCP,
+      verify integrations, run smoke tests, and assert on tool calls in automated evals.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#integrate">Connect a client →</a>
+      <a class="btn btn-ghost" href="https://github.com/heptafox/mcp-sandbox" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+    <ul class="badges">
+      <li>Open source</li>
+      <li>Beginner friendly</li>
+      <li>Streamable HTTP</li>
+      <li>Stable canary tokens</li>
+      <li>QA ready</li>
+    </ul>
+  </div>
 </header>
 
-<main>
-  <section>
-    <h2>Tools</h2>
-    <p>Endpoint: <code id="ep">/mcp</code> &nbsp;(no trailing slash).</p>
-    <div id="tools">
-      <div class="card">
+<main class="wrap">
+
+  <!-- WHY -->
+  <section id="why">
+    <div class="sec-head">
+      <h2>Why mcp-sandbox?</h2>
+      <p class="lead">
+        While building or testing an agent you usually don't want to connect to a production MCP
+        server. You want deterministic tools that always return a known output — so you can tell
+        whether the MCP layer actually worked.
+      </p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><div class="ico">🎓</div><h3>Learn MCP</h3><p>Connect a real MCP server in minutes — no API keys, accounts, or data setup.</p></div>
+      <div class="card"><div class="ico">🔌</div><h3>Test clients</h3><p>Confirm your MCP client actually calls tools and relays their output.</p></div>
+      <div class="card"><div class="ico">✅</div><h3>Verify integrations</h3><p>Prove the MCP wiring works end to end before pointing at real services.</p></div>
+      <div class="card"><div class="ico">🚦</div><h3>Smoke tests</h3><p>A one-call health check for CI/CD pipelines and agent frameworks.</p></div>
+      <div class="card"><div class="ico">🧪</div><h3>Automated evals</h3><p>Assert on a stable token instead of fuzzy natural-language output.</p></div>
+      <div class="card"><div class="ico">🆓</div><h3>Free &amp; open</h3><p>Apache-2.0, self-hostable, and built for the community to extend.</p></div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <section id="clients">
+    <div class="sec-head">
+      <h2>Works with any MCP client</h2>
+      <p class="lead">Streamable HTTP transport — connect from your favorite agent stack.</p>
+    </div>
+    <div class="chips">
+      <span class="chip"><strong>Claude Desktop</strong></span>
+      <span class="chip"><strong>Claude Code</strong></span>
+      <span class="chip">Cursor</span>
+      <span class="chip">Google ADK</span>
+      <span class="chip">LangChain</span>
+      <span class="chip">CrewAI</span>
+      <span class="chip">OpenAI Agents SDK</span>
+      <span class="chip">MCP Inspector</span>
+      <span class="chip">Any MCP-compatible client</span>
+    </div>
+  </section>
+
+  <!-- LEARNING PROGRESSION -->
+  <section id="learn">
+    <div class="sec-head">
+      <h2>Learning progression</h2>
+      <p class="lead">Climb one MCP concept at a time, from "is it connected?" to "did auth arrive?"</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Level</th><th>Tool</th><th>Auth</th><th>Params</th><th>Teaches</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="lvl">1</span></td><td><code>identity</code></td><td>No</td><td>No</td><td>Connectivity</td></tr>
+          <tr><td><span class="lvl">2</span></td><td><code>echo</code></td><td>No</td><td>Yes</td><td>Passing parameters</td></tr>
+          <tr><td><span class="lvl">3</span></td><td><code>auth_check</code></td><td>Bearer</td><td>No</td><td>Authentication</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="tools">
+    <div class="sec-head">
+      <h2>Tools</h2>
+      <p class="lead">Endpoint: <code id="ep">/mcp</code> &nbsp;(no trailing slash). Each tool returns a fixed canary — show it verbatim.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card tool">
         <h3>identity</h3>
         <p class="params">params: none</p>
-        <p>Confirms the server is connected. Returns a fixed ID string — show it verbatim.</p>
-        <div class="canary">MCP-SANDBOX canary 7Q9X-ZK42-VORTEX-PARSNIP</div>
+        <p>Confirms the server is connected. Returns a fixed ID string.</p>
+        <div class="canary"><span class="lbl">Returns</span>MCP-SANDBOX canary 7Q9X-ZK42-VORTEX-PARSNIP</div>
       </div>
-      <div class="card">
+      <div class="card tool">
         <h3>echo</h3>
         <p class="params">params: message: str, repeat: int = 1</p>
         <p>Sends your text through the server and returns it inside a fixed wrapper, repeated <code>repeat</code> times.</p>
-        <div class="canary">MCP-SANDBOX echo 4F7T-ECHO-START &gt;&gt;&gt; your text &lt;&lt;&lt; 4F7T-ECHO-END</div>
+        <div class="canary"><span class="lbl">Returns</span>MCP-SANDBOX echo 4F7T-ECHO-START &gt;&gt;&gt; your text &lt;&lt;&lt; 4F7T-ECHO-END</div>
       </div>
-      <div class="card">
+      <div class="card tool">
         <h3>auth_check</h3>
         <p class="params">params: none (reads Authorization header)</p>
         <p>Verifies the server saw your <code>Authorization: Bearer &lt;token&gt;</code> header.</p>
-        <div class="canary">MCP-SANDBOX auth OK 9B3K-AUTHED-MARIGOLD</div>
+        <div class="canary"><span class="lbl">Returns</span>MCP-SANDBOX auth OK 9B3K-AUTHED-MARIGOLD</div>
       </div>
     </div>
   </section>
 
-  <section>
-    <h2>Integrate</h2>
-    <p>Add to <strong>Claude Code</strong> (one command, with the dev Bearer token):</p>
-    <pre><code>claude mcp add --transport http mcp-sandbox <span class="url">URL</span> \
-  --header "Authorization: Bearer mcp-sandbox-dev-C7H2-KPMERCHANT"</code></pre>
-
-    <p>Add to <strong>Claude Desktop</strong> — config is stdio-only, so bridge through
-    <code>mcp-remote</code> in <code>claude_desktop_config.json</code>:</p>
-    <pre><code>{
+  <!-- INTEGRATE -->
+  <section id="integrate">
+    <div class="sec-head">
+      <h2>Connect in one step</h2>
+      <p class="lead">Pick your client. The URL below is filled in live from this page's address.</p>
+    </div>
+    <div class="grid grid-2">
+      <div class="card code-card">
+        <h3>Claude Code</h3>
+        <p class="pre-label">One command, with the dev Bearer token:</p>
+        <pre><code>claude mcp add --transport http mcp-sandbox <span class="url">URL</span> \
+  --header "Authorization: Bearer <span class="tok">mcp-sandbox-dev-C7H2-KPMERCHANT</span>"</code></pre>
+      </div>
+      <div class="card code-card">
+        <h3>Claude Desktop</h3>
+        <p class="pre-label">Config is stdio-only — bridge via <code>mcp-remote</code> in <code>claude_desktop_config.json</code>:</p>
+        <pre><code>{
   "mcpServers": {
     "mcp-sandbox": {
       "command": "npx",
       "args": [
         "-y", "mcp-remote", "<span class="url">URL</span>",
-        "--header", "Authorization: Bearer mcp-sandbox-dev-C7H2-KPMERCHANT"
+        "--header", "Authorization: Bearer <span class="tok">mcp-sandbox-dev-C7H2-KPMERCHANT</span>"
       ]
     }
   }
 }</code></pre>
-
-    <p>Raw HTTP — call the MCP endpoint directly:</p>
-    <pre><code>curl -X POST <span class="url">URL</span> \
-  -H "Authorization: Bearer mcp-sandbox-dev-C7H2-KPMERCHANT" \
+      </div>
+      <div class="card code-card" style="grid-column: 1 / -1;">
+        <h3>Raw HTTP</h3>
+        <p class="pre-label">Call the MCP endpoint directly with curl:</p>
+        <pre><code>curl -X POST <span class="url">URL</span> \
+  -H "Authorization: Bearer <span class="tok">mcp-sandbox-dev-C7H2-KPMERCHANT</span>" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call",
        "params":{"name":"identity","arguments":{}}}'</code></pre>
+      </div>
+    </div>
+    <p class="note" style="margin-top:16px;">
+      ⚠️ Endpoint is <code>/mcp</code> with <strong>no trailing slash</strong> — <code>/mcp/</code>
+      307-redirects to <code>/mcp</code> and some clients drop the POST body across the redirect.
+    </p>
   </section>
 
-  <section>
-    <h2>Prompt &amp; expected response</h2>
-    <p>Once connected, ask the model to call a tool. The model relays the canary verbatim —
-    that exact token is what you assert on.</p>
-    <div class="how-qa">
-      <div class="qa-row"><span class="qa-label">Prompt</span>Call the mcp-sandbox <code>identity</code> tool and show me what it returned.</div>
-      <div class="qa-row"><span class="qa-label">Expected</span>
-        <span class="qa-answer">MCP-SANDBOX canary 7Q9X-ZK42-VORTEX-PARSNIP</span></div>
-      <p class="qa-note">If the token appears, the call reached this server. If the model
-        answers without it, the tool was never invoked.</p>
+  <!-- PROMPT EXAMPLES -->
+  <section id="examples">
+    <div class="sec-head">
+      <h2>Prompt → canary → proof</h2>
+      <p class="lead">Ask a connected model to call a tool. The token it relays is what you assert on.</p>
     </div>
-    <div class="how-qa">
-      <div class="qa-row"><span class="qa-label">Prompt</span>Call the mcp-sandbox <code>auth_check</code> tool and show the result.</div>
-      <div class="qa-row"><span class="qa-label">Expected</span>
-        <span class="qa-answer">MCP-SANDBOX auth OK 9B3K-AUTHED-MARIGOLD</span></div>
-      <p class="qa-note">Confirms your Bearer token reached the server. Without a valid token
-        you get <code>MCP-SANDBOX auth FAIL 9B3K-NOAUTH-CINDER</code> instead.</p>
+    <div class="flow grid-2 grid">
+      <div class="flow-card">
+        <div class="flow-row"><span class="flow-label">Prompt</span><span class="flow-val">Call the mcp-sandbox <code>identity</code> tool and show what it returned.</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-row"><span class="flow-label">Response</span><span class="flow-val answer">MCP-SANDBOX canary 7Q9X-ZK42-VORTEX-PARSNIP</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-row"><span class="flow-label">Why</span><span class="flow-val why">The token appears → the call reached this server. No token → the tool was never invoked.</span></div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-row"><span class="flow-label">Prompt</span><span class="flow-val">Call the mcp-sandbox <code>auth_check</code> tool and show the result.</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-row"><span class="flow-label">Response</span><span class="flow-val answer">MCP-SANDBOX auth OK 9B3K-AUTHED-MARIGOLD</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-row"><span class="flow-label">Why</span><span class="flow-val why">Your Bearer token reached the server. Without a valid token you get <code>9B3K-NOAUTH-CINDER</code> instead.</span></div>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>Auth — Bearer token</h2>
-    <div class="auth">
-      <h3>Dev token (public, for integration testing)</h3>
-      <p>Send it in the <code>Authorization</code> header. This is a shared smoke-test token,
-        not a secret — it only gates the <code>auth_check</code> tool.</p>
+  <!-- QA -->
+  <section id="qa">
+    <div class="sec-head">
+      <h2>QA &amp; GenAI evaluations</h2>
+      <p class="lead">Assert on the raw tool result, not the model's prose — the token is stable, the wording isn't.</p>
+    </div>
+    <div class="card code-card">
+      <p class="pre-label">In-memory smoke test with the FastMCP client:</p>
+      <pre><code>import asyncio
+from fastmcp import Client
+
+async def main():
+    async with Client("<span class="url">URL</span>") as c:
+        result = await c.call_tool("identity", {})
+        assert "7Q9X-ZK42-VORTEX-PARSNIP" in result.content[0].text
+
+asyncio.run(main())</code></pre>
+    </div>
+  </section>
+
+  <!-- AUTH -->
+  <section id="auth">
+    <div class="sec-head">
+      <h2>Authentication</h2>
+      <p class="lead">The <code>auth_check</code> tool is gated by a public development Bearer token.</p>
+    </div>
+    <div class="callout">
+      <h3>Dev token <span class="pill-warn">public · not a production credential</span></h3>
+      <p>Send it in the <code>Authorization</code> header. It's a shared smoke-test token for
+        integration testing — <strong>it is public, intended for testing, and only gates the
+        <code>auth_check</code> tool.</strong></p>
       <p><span class="token">Authorization: Bearer mcp-sandbox-dev-C7H2-KPMERCHANT</span></p>
     </div>
   </section>
+
+  <!-- CONTRIBUTE -->
+  <section id="contribute">
+    <div class="sec-head">
+      <h2>Open source — contributions welcome</h2>
+      <p class="lead">
+        mcp-sandbox aims to be the go-to sandbox MCP server for learning, building, and evaluating.
+        Beginners especially welcome — a new tool is just one <code>@mcp.tool</code> function.
+      </p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><h3>🧰 New tools</h3><p>Beginner-friendly fixtures: error simulation, streaming, structured output.</p></div>
+      <div class="card"><h3>🔑 Auth examples</h3><p>OAuth flows and additional authentication methods.</p></div>
+      <div class="card"><h3>🔌 Client examples</h3><p>Cursor, Google ADK, LangChain, CrewAI, OpenAI Agents SDK.</p></div>
+      <div class="card"><h3>🧪 Eval scenarios</h3><p>Ready-made evaluation cases and assertion patterns.</p></div>
+      <div class="card"><h3>📖 Docs &amp; tutorials</h3><p>Guides, sample projects, and clearer explanations.</p></div>
+      <div class="card"><h3>🐛 Bug fixes</h3><p>Spot something off? Open an issue or send a PR.</p></div>
+    </div>
+    <div class="cta" style="justify-content:flex-start; margin: 26px 0 0;">
+      <a class="btn btn-primary" href="https://github.com/heptafox/mcp-sandbox" target="_blank" rel="noopener">Star on GitHub</a>
+      <a class="btn btn-ghost" href="https://github.com/heptafox/mcp-sandbox/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Read the contributor guide</a>
+      <a class="btn btn-ghost" href="https://github.com/heptafox/mcp-sandbox/issues" target="_blank" rel="noopener">Open an issue or discussion</a>
+    </div>
+  </section>
+
 </main>
 
 <footer>
-  <p>For evals, assert on the raw tool result rather than the model's prose —
-    the token is stable, the wording isn't.</p>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="https://github.com/heptafox/mcp-sandbox" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/heptafox/mcp-sandbox/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+      <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">About MCP</a>
+    </div>
+    <p>For evals, assert on the raw tool result rather than the model's prose — the token is stable, the wording isn't.</p>
+    <p>Free &amp; open source · Apache-2.0</p>
+  </div>
 </footer>
 
 <script>
@@ -248,6 +492,19 @@
   const mcpUrl = location.origin + '/mcp';
   document.getElementById('ep').textContent = mcpUrl;
   document.querySelectorAll('.url').forEach(el => el.textContent = mcpUrl);
+
+  // Live GitHub star/fork counts.
+  fetch('https://api.github.com/repos/heptafox/mcp-sandbox')
+    .then(r => r.json())
+    .then(d => {
+      const set = (id, txt) => {
+        const el = document.getElementById(id);
+        el.textContent = txt; el.hidden = false;
+      };
+      set('gh-stars', '★ ' + d.stargazers_count);
+      set('gh-forks', '⑂ ' + d.forks_count);
+    })
+    .catch(() => {});
 </script>
 </body>
 </html>

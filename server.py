@@ -18,6 +18,11 @@ async def index(request):
     return FileResponse(WEB / "index.html")
 
 
+@mcp.custom_route("/mcp-logo.png", methods=["GET"])
+async def logo(request):
+    return FileResponse(WEB / "mcp-logo.png", media_type="image/png")
+
+
 @mcp.custom_route("/robots.txt", methods=["GET"])
 async def robots(request):
     return FileResponse(WEB / "robots.txt", media_type="text/plain")
