@@ -10,9 +10,22 @@ mcp = FastMCP("mcp-sandbox")
 DEV_TOKEN = "mcp-sandbox-dev-C7H2-KPMERCHANT"
 
 
+WEB = Path(__file__).parent / "web"
+
+
 @mcp.custom_route("/", methods=["GET"])
 async def index(request):
-    return FileResponse(Path(__file__).parent / "web" / "index.html")
+    return FileResponse(WEB / "index.html")
+
+
+@mcp.custom_route("/robots.txt", methods=["GET"])
+async def robots(request):
+    return FileResponse(WEB / "robots.txt", media_type="text/plain")
+
+
+@mcp.custom_route("/sitemap.xml", methods=["GET"])
+async def sitemap(request):
+    return FileResponse(WEB / "sitemap.xml", media_type="application/xml")
 
 
 @mcp.tool(
